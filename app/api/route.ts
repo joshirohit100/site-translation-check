@@ -15,11 +15,13 @@ export async function POST(request: Request) {
   // Only get the content of body of ".main-content__container" element.
   // Ignore the image reading.
   // Ignore the elements which are visually hidden.
-  const options = { baseElements: { selectors: ['.main-content__container'] }, selectors: [
-      { selector: 'a', options: { linkBrackets: false, ignoreHref: true } },
-      { selector: 'img', format: 'skip' },
-      { selector: '.visually-hidden', format: 'skip' }
-    ]
+  const options = {
+      baseElements: { selectors: ['body'] },
+      selectors: [
+        { selector: 'a', options: { linkBrackets: false, ignoreHref: true } },
+        { selector: 'img', format: 'skip' },
+        { selector: '.visually-hidden', format: 'skip' }
+      ]
   }
   const convertedData = convert(htmlData, options);
 
@@ -33,7 +35,7 @@ export async function POST(request: Request) {
   // OpenAI api call to get the result.
   const chatCompletion = await openai.chat.completions.create({
     messages: [
-      { role: "system", content: "You are a content auditor. You are responsible to review the content and provide feedback whether content is fully translated in " + data.language + "language or not. If content is not full translated, you highlight the section which is not translated in JSON format with key 'not_translated'. If full translated, provide in JSON key 'fully_translated'" },
+      { role: "system", content: "You are a content auditor. You are responsible to review the content and provide feedback whether content is fully translated in " + data.language + "language or not. If content is not full translated, you provide content which is not translated in JSON format with key 'not_translated'. If full translated, provide in JSON key 'fully_translated'" },
       { role: "user", content: convertedData }
     ],
     model: process.env.OPENAI_MODEL,

@@ -64,9 +64,15 @@ export default function Home() {
 
         // If content is not fully translated.
         let notTranslatedText = "";
-        for (let i = 0; i < jsonFormated['not_translated'].length; i++) {
-          notTranslatedText += jsonFormated['not_translated'][i] + '<br/><br/>';
+        if (jsonFormated['not_translated'] && !Array.isArray(jsonFormated['not_translated'])) {
+          notTranslatedText += jsonFormated['not_translated'] + '<br/></br>';
         }
+        else {
+          for (let i = 0; i < jsonFormated['not_translated'].length; i++) {
+            notTranslatedText += jsonFormated['not_translated'][i] + '<br/><br/>';
+          }
+        }
+
         setApiResponseMessage(notTranslatedText);
         setErrorSuccessNotice(3);
         setShowSpinner(false);
