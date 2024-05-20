@@ -5,10 +5,16 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   const data = await request.json();
   
+  // Add the header if from cloud ide.
+  let cookieHeader = 'scrap=1';
+  if (process.env.IDE_SHARE_CODE) {
+    cookieHeader = 'share=' + process.env.IDE_SHARE_CODE;
+  }
+
   // Fetch the HTML content of the URL.
   const htmlData = (await (await fetch(data.url, {
     'headers': {
-      "cookie": 'share=' + process.env.IDE_SHARE_CODE,
+      "cookie": cookieHeader,
     },
   })).text());
 
